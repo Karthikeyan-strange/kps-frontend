@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { 
   Network, BarChart3, ZapOff, UploadCloud, Info, AlertTriangle, 
-  Trash2, ShieldAlert, CheckCircle, HelpCircle, Layers 
+  Trash2, ShieldAlert, CheckCircle, HelpCircle, Layers, Database 
 } from 'lucide-react'
 import api from './api'
 
@@ -10,6 +10,7 @@ import NodeDetailPanel from './components/NodeDetailPanel'
 import MetricsDashboard from './components/MetricsDashboard'
 import FailureSimulator from './components/FailureSimulator'
 import YamlUpload from './components/YamlUpload'
+import SavedDatasets from './components/SavedDatasets'
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('graph') // graph, metrics, simulator, upload
@@ -233,6 +234,18 @@ export default function App() {
               <UploadCloud className="w-4 h-4" />
               YAML Config Upload
             </button>
+
+            <button
+              onClick={() => setActiveTab('history')}
+              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold transition-all border-l-4 text-left ${
+                activeTab === 'history'
+                  ? 'border-kps-gold text-kps-gold bg-white/5 font-extrabold'
+                  : 'border-transparent text-gray-400 hover:text-white hover:bg-white/[0.02]'
+              }`}
+            >
+              <Database className="w-4 h-4" />
+              Saved Datasets
+            </button>
           </div>
 
           {/* Sidebar Footer info */}
@@ -333,6 +346,13 @@ export default function App() {
 
           {activeTab === 'upload' && (
             <YamlUpload onUploadSuccess={handleUploadSuccess} />
+          )}
+
+          {activeTab === 'history' && (
+            <SavedDatasets onDatasetLoaded={() => {
+              fetchGraphData() // reload topology
+              setActiveTab('graph') // redirect to canvas
+            }} />
           )}
 
         </main>
